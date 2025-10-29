@@ -8,10 +8,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import agendaDemo from "@/assets/agenda-demo.jpg";
+import agendaDemo2 from "@/assets/agenda-demo-2.jpg";
 import escalasDemo from "@/assets/escalas-demo.jpg";
+import escalasDemo2 from "@/assets/escalas-demo-2.jpg";
 import membrosDemo from "@/assets/membros-demo.jpg";
+import membrosDemo2 from "@/assets/membros-demo-2.jpg";
 import acessoDemo from "@/assets/acesso-demo.jpg";
+import acessoDemo2 from "@/assets/acesso-demo-2.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -66,10 +71,24 @@ const Index = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Calendário completo com eventos recorrentes e notificações automáticas
             </p>
-            <Carousel className="w-full">
+            <Carousel 
+              className="w-full"
+              plugins={[
+                Autoplay({
+                  delay: 2000,
+                  stopOnInteraction: false,
+                })
+              ]}
+              opts={{
+                loop: true,
+              }}
+            >
               <CarouselContent>
                 <CarouselItem>
                   <img src={agendaDemo} alt="Demonstração de calendário de eventos" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={agendaDemo2} alt="Demonstração de calendário mensal" className="w-full h-40 object-cover rounded-lg" />
                 </CarouselItem>
               </CarouselContent>
             </Carousel>
@@ -83,10 +102,24 @@ const Index = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Sistema completo de escalas com troca de turnos e aprovação de líderes
             </p>
-            <Carousel className="w-full">
+            <Carousel 
+              className="w-full"
+              plugins={[
+                Autoplay({
+                  delay: 2100,
+                  stopOnInteraction: false,
+                })
+              ]}
+              opts={{
+                loop: true,
+              }}
+            >
               <CarouselContent>
                 <CarouselItem>
                   <img src={escalasDemo} alt="Demonstração de sistema de escalas" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={escalasDemo2} alt="Demonstração de gestão de turnos" className="w-full h-40 object-cover rounded-lg" />
                 </CarouselItem>
               </CarouselContent>
             </Carousel>
@@ -100,10 +133,24 @@ const Index = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Organize membros por ministérios e acompanhe participação
             </p>
-            <Carousel className="w-full">
+            <Carousel 
+              className="w-full"
+              plugins={[
+                Autoplay({
+                  delay: 2000,
+                  stopOnInteraction: false,
+                })
+              ]}
+              opts={{
+                loop: true,
+              }}
+            >
               <CarouselContent>
                 <CarouselItem>
                   <img src={membrosDemo} alt="Demonstração de gestão de membros" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={membrosDemo2} alt="Demonstração de lista de membros" className="w-full h-40 object-cover rounded-lg" />
                 </CarouselItem>
               </CarouselContent>
             </Carousel>
@@ -117,10 +164,24 @@ const Index = () => {
             <p className="text-muted-foreground text-sm mb-4">
               Diferentes níveis de permissão para admins, líderes e membros
             </p>
-            <Carousel className="w-full">
+            <Carousel 
+              className="w-full"
+              plugins={[
+                Autoplay({
+                  delay: 2100,
+                  stopOnInteraction: false,
+                })
+              ]}
+              opts={{
+                loop: true,
+              }}
+            >
               <CarouselContent>
                 <CarouselItem>
                   <img src={acessoDemo} alt="Demonstração de controle de acesso" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={acessoDemo2} alt="Demonstração de permissões de usuários" className="w-full h-40 object-cover rounded-lg" />
                 </CarouselItem>
               </CarouselContent>
             </Carousel>

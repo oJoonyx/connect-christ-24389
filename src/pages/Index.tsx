@@ -22,7 +22,9 @@ const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-accent/10">
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(0_0%_5%)_0%,_hsl(0_0%_95%)_100%)]" />
+      <div className="relative z-10">
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow">
@@ -192,6 +194,7 @@ const Index = () => {
       <footer className="container mx-auto px-4 py-8 mt-20 border-t text-center text-muted-foreground text-sm">
         <p>© 2025 Gestão Igreja. Sistema desenvolvido para facilitar a gestão de igrejas.</p>
       </footer>
+      </div>
     </div>
   );
 };

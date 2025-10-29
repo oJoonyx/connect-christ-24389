@@ -1,6 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Church, Calendar, Users, ClipboardList, Sparkles } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import agendaDemo from "@/assets/agenda-demo.jpg";
+import escalasDemo from "@/assets/escalas-demo.jpg";
+import membrosDemo from "@/assets/membros-demo.jpg";
+import acessoDemo from "@/assets/acesso-demo.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -52,9 +63,16 @@ const Index = () => {
               <Calendar className="w-6 h-6 text-primary" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm mb-4">
               Calendário completo com eventos recorrentes e notificações automáticas
             </p>
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <img src={agendaDemo} alt="Demonstração de calendário de eventos" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </div>
 
           <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
@@ -62,9 +80,16 @@ const Index = () => {
               <ClipboardList className="w-6 h-6 text-accent" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Escalas</h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm mb-4">
               Sistema completo de escalas com troca de turnos e aprovação de líderes
             </p>
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <img src={escalasDemo} alt="Demonstração de sistema de escalas" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </div>
 
           <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
@@ -72,9 +97,16 @@ const Index = () => {
               <Users className="w-6 h-6 text-primary" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm mb-4">
               Organize membros por ministérios e acompanhe participação
             </p>
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <img src={membrosDemo} alt="Demonstração de gestão de membros" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </div>
 
           <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
@@ -82,9 +114,16 @@ const Index = () => {
               <Church className="w-6 h-6 text-accent" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm mb-4">
               Diferentes níveis de permissão para admins, líderes e membros
             </p>
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <img src={acessoDemo} alt="Demonstração de controle de acesso" className="w-full h-40 object-cover rounded-lg" />
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
           </div>
         </div>
       </main>

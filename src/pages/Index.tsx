@@ -22,8 +22,8 @@ const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(0_0%_5%)_0%,_hsl(0_0%_95%)_100%)]" />
+    <div className="min-h-screen relative overflow-hidden bg-[hsl(0_0%_15%)]">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_hsl(0_0%_95%)_100%)]" />
       <div className="relative z-10">
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">

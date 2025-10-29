@@ -13,6 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+const sb = supabase as any;
+
 const Eventos = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -34,7 +36,7 @@ const Eventos = () => {
     }
 
     // Verificar role do usuário
-    const { data: roleData } = await supabase
+    const { data: roleData } = await sb
       .from("user_roles")
       .select("role")
       .eq("user_id", session.user.id)
@@ -49,7 +51,7 @@ const Eventos = () => {
 
   const loadEvents = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+  const { data, error } = await sb
       .from("events")
       .select(`
         *,
@@ -89,7 +91,7 @@ const Eventos = () => {
       created_by: user.id,
     };
 
-    const { error } = await supabase.from("events").insert([eventData]);
+    const { error } = await sb.from("events").insert([eventData]);
 
     if (error) {
       toast({

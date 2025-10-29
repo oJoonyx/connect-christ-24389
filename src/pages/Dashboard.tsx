@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, Users, ClipboardList, LogOut, Church } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const sb = supabase as any;
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -24,7 +26,7 @@ const Dashboard = () => {
 
       setUser(session.user);
       
-      const { data: profileData } = await supabase
+      const { data: profileData } = await sb
         .from("profiles")
         .select("*")
         .eq("id", session.user.id)

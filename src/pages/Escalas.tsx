@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+const sb = supabase as any;
+
 const Escalas = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -33,7 +35,7 @@ const Escalas = () => {
 
     setUserId(session.user.id);
 
-    const { data: roleData } = await supabase
+    const { data: roleData } = await sb
       .from("user_roles")
       .select("role")
       .eq("user_id", session.user.id)
@@ -50,7 +52,7 @@ const Escalas = () => {
     setLoading(true);
 
     // Carregar escalas com eventos e atribuições
-    const { data: schedulesData } = await supabase
+    const { data: schedulesData } = await sb
       .from("schedules")
       .select(`
         *,
@@ -66,7 +68,7 @@ const Escalas = () => {
     setSchedules(schedulesData || []);
 
     // Carregar minhas atribuições
-    const { data: myAssignmentsData } = await supabase
+    const { data: myAssignmentsData } = await sb
       .from("schedule_assignments")
       .select(`
         *,
@@ -81,7 +83,7 @@ const Escalas = () => {
     setMyAssignments(myAssignmentsData || []);
 
     // Carregar solicitações de troca
-    const { data: swapData } = await supabase
+    const { data: swapData } = await sb
       .from("swap_requests")
       .select(`
         *,
@@ -102,7 +104,7 @@ const Escalas = () => {
   };
 
   const handleConfirmAssignment = async (assignmentId: string) => {
-    const { error } = await supabase
+  const { error } = await sb
       .from("schedule_assignments")
       .update({ confirmed: true })
       .eq("id", assignmentId);
@@ -123,7 +125,7 @@ const Escalas = () => {
   };
 
   const handleApproveSwap = async (swapId: string, approve: boolean) => {
-    const { error } = await supabase
+  const { error } = await sb
       .from("swap_requests")
       .update({
         status: approve ? "approved" : "rejected",

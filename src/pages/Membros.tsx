@@ -13,6 +13,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowLeft, Users, Plus, Loader2, Shield, User as UserIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const sb = supabase as any;
+
 const Membros = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -35,7 +37,7 @@ const Membros = () => {
       return;
     }
 
-    const { data: roleData } = await supabase
+    const { data: roleData } = await sb
       .from("user_roles")
       .select("role")
       .eq("user_id", session.user.id)
@@ -52,7 +54,7 @@ const Membros = () => {
     setLoading(true);
 
     // Carregar membros com roles
-    const { data: membersData } = await supabase
+    const { data: membersData } = await sb
       .from("profiles")
       .select(`
         *,
@@ -63,7 +65,7 @@ const Membros = () => {
     setMembers(membersData || []);
 
     // Carregar ministérios com membros
-    const { data: ministriesData } = await supabase
+    const { data: ministriesData } = await sb
       .from("ministries")
       .select(`
         *,
@@ -95,7 +97,7 @@ const Membros = () => {
       leader_id: user.id,
     };
 
-    const { error } = await supabase.from("ministries").insert([ministryData]);
+    const { error } = await sb.from("ministries").insert([ministryData]);
 
     if (error) {
       toast({

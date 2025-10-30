@@ -66,14 +66,16 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6 text-primary" />
+          <div className="space-y-4">
+            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Calendar className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
+              <p className="text-muted-foreground text-sm">
+                Calendário completo com eventos recorrentes e notificações automáticas
+              </p>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Calendário completo com eventos recorrentes e notificações automáticas
-            </p>
             <Carousel 
               className="w-full"
               plugins={[
@@ -97,14 +99,16 @@ const Index = () => {
             </Carousel>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-              <ClipboardList className="w-6 h-6 text-accent" />
+          <div className="space-y-4">
+            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                <ClipboardList className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Escalas</h3>
+              <p className="text-muted-foreground text-sm">
+                Sistema completo de escalas com troca de turnos e aprovação de líderes
+              </p>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Escalas</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Sistema completo de escalas com troca de turnos e aprovação de líderes
-            </p>
             <Carousel 
               className="w-full"
               plugins={[
@@ -128,14 +132,16 @@ const Index = () => {
             </Carousel>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-              <Users className="w-6 h-6 text-primary" />
+          <div className="space-y-4">
+            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
+              <p className="text-muted-foreground text-sm">
+                Organize membros por ministérios e acompanhe participação
+              </p>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Organize membros por ministérios e acompanhe participação
-            </p>
             <Carousel 
               className="w-full"
               plugins={[
@@ -159,14 +165,16 @@ const Index = () => {
             </Carousel>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-              <Church className="w-6 h-6 text-accent" />
+          <div className="space-y-4">
+            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                <Church className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
+              <p className="text-muted-foreground text-sm">
+                Diferentes níveis de permissão para admins, líderes e membros
+              </p>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Diferentes níveis de permissão para admins, líderes e membros
-            </p>
             <Carousel 
               className="w-full"
               plugins={[

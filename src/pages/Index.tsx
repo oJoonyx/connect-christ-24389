@@ -65,139 +65,143 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          <div className="space-y-4">
-            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Calendar className="w-6 h-6 text-primary" />
+        <Carousel 
+          className="w-full max-w-6xl mx-auto"
+          plugins={[
+            Autoplay({
+              delay: 3000,
+              stopOnInteraction: false,
+            })
+          ]}
+          opts={{
+            loop: true,
+            align: "start",
+          }}
+        >
+          <CarouselContent className="-ml-4">
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Calendar className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Calendário completo com eventos recorrentes e notificações automáticas
+                  </p>
+                </div>
+                <img src={agendaDemo} alt="Demonstração de calendário de eventos" className="w-full h-48 object-cover rounded-lg shadow-lg" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
-              <p className="text-muted-foreground text-sm">
-                Calendário completo com eventos recorrentes e notificações automáticas
-              </p>
-            </div>
-            <Carousel 
-              className="w-full"
-              plugins={[
-                Autoplay({
-                  delay: 2000,
-                  stopOnInteraction: false,
-                })
-              ]}
-              opts={{
-                loop: true,
-              }}
-            >
-              <CarouselContent>
-                <CarouselItem>
-                  <img src={agendaDemo} alt="Demonstração de calendário de eventos" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-                <CarouselItem>
-                  <img src={agendaDemo2} alt="Demonstração de calendário mensal" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
+            </CarouselItem>
 
-          <div className="space-y-4">
-            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                <ClipboardList className="w-6 h-6 text-accent" />
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                    <ClipboardList className="w-6 h-6 text-accent" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Escalas</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Sistema completo de escalas com troca de turnos e aprovação de líderes
+                  </p>
+                </div>
+                <img src={escalasDemo} alt="Demonstração de sistema de escalas" className="w-full h-48 object-cover rounded-lg shadow-lg" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Escalas</h3>
-              <p className="text-muted-foreground text-sm">
-                Sistema completo de escalas com troca de turnos e aprovação de líderes
-              </p>
-            </div>
-            <Carousel 
-              className="w-full"
-              plugins={[
-                Autoplay({
-                  delay: 2100,
-                  stopOnInteraction: false,
-                })
-              ]}
-              opts={{
-                loop: true,
-              }}
-            >
-              <CarouselContent>
-                <CarouselItem>
-                  <img src={escalasDemo} alt="Demonstração de sistema de escalas" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-                <CarouselItem>
-                  <img src={escalasDemo2} alt="Demonstração de gestão de turnos" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
+            </CarouselItem>
 
-          <div className="space-y-4">
-            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-primary" />
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Users className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Organize membros por ministérios e acompanhe participação
+                  </p>
+                </div>
+                <img src={membrosDemo} alt="Demonstração de gestão de membros" className="w-full h-48 object-cover rounded-lg shadow-lg" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
-              <p className="text-muted-foreground text-sm">
-                Organize membros por ministérios e acompanhe participação
-              </p>
-            </div>
-            <Carousel 
-              className="w-full"
-              plugins={[
-                Autoplay({
-                  delay: 2000,
-                  stopOnInteraction: false,
-                })
-              ]}
-              opts={{
-                loop: true,
-              }}
-            >
-              <CarouselContent>
-                <CarouselItem>
-                  <img src={membrosDemo} alt="Demonstração de gestão de membros" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-                <CarouselItem>
-                  <img src={membrosDemo2} alt="Demonstração de lista de membros" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
+            </CarouselItem>
 
-          <div className="space-y-4">
-            <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-                <Church className="w-6 h-6 text-accent" />
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                    <Church className="w-6 h-6 text-accent" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Diferentes níveis de permissão para admins, líderes e membros
+                  </p>
+                </div>
+                <img src={acessoDemo} alt="Demonstração de controle de acesso" className="w-full h-48 object-cover rounded-lg shadow-lg" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
-              <p className="text-muted-foreground text-sm">
-                Diferentes níveis de permissão para admins, líderes e membros
-              </p>
-            </div>
-            <Carousel 
-              className="w-full"
-              plugins={[
-                Autoplay({
-                  delay: 2100,
-                  stopOnInteraction: false,
-                })
-              ]}
-              opts={{
-                loop: true,
-              }}
-            >
-              <CarouselContent>
-                <CarouselItem>
-                  <img src={acessoDemo} alt="Demonstração de controle de acesso" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-                <CarouselItem>
-                  <img src={acessoDemo2} alt="Demonstração de permissões de usuários" className="w-full h-40 object-cover rounded-lg" />
-                </CarouselItem>
-              </CarouselContent>
-            </Carousel>
-          </div>
-        </div>
+            </CarouselItem>
+
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Calendar className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Calendário Mensal</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Visualize todos os eventos do mês em uma única tela
+                  </p>
+                </div>
+                <img src={agendaDemo2} alt="Demonstração de calendário mensal" className="w-full h-48 object-cover rounded-lg shadow-lg" />
+              </div>
+            </CarouselItem>
+
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                    <ClipboardList className="w-6 h-6 text-accent" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Gestão de Turnos</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Atribua e gerencie turnos de forma simples e eficiente
+                  </p>
+                </div>
+                <img src={escalasDemo2} alt="Demonstração de gestão de turnos" className="w-full h-48 object-cover rounded-lg shadow-lg" />
+              </div>
+            </CarouselItem>
+
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Users className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Lista de Membros</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Acesse informações completas de todos os membros
+                  </p>
+                </div>
+                <img src={membrosDemo2} alt="Demonstração de lista de membros" className="w-full h-48 object-cover rounded-lg shadow-lg" />
+              </div>
+            </CarouselItem>
+
+            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+              <div className="space-y-3">
+                <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                    <Church className="w-6 h-6 text-accent" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Permissões</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Configure permissões específicas para cada usuário
+                  </p>
+                </div>
+                <img src={acessoDemo2} alt="Demonstração de permissões de usuários" className="w-full h-48 object-cover rounded-lg shadow-lg" />
+              </div>
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious className="left-0" />
+          <CarouselNext className="right-0" />
+        </Carousel>
       </main>
 
       <footer className="container mx-auto px-4 py-8 mt-20 border-t text-center text-muted-foreground text-sm">

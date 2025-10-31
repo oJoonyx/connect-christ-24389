@@ -31,7 +31,7 @@ const Index = () => {
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow">
             <Church className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-primary">
+          <span className="text-xl font-bold text-white">
             Gestão Igreja
           </span>
         </div>
@@ -46,7 +46,7 @@ const Index = () => {
             <Sparkles className="w-4 h-4" />
             Sistema Completo de Gestão
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
             Organize sua igreja
             <br />
             de forma simples
@@ -70,7 +70,7 @@ const Index = () => {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Calendar className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary">Agenda</h3>
+            <h3 className="text-lg font-semibold mb-2 text-white">Agenda</h3>
             <p className="text-white/70 text-sm">
               Calendário completo com eventos recorrentes e notificações automáticas
             </p>
@@ -80,7 +80,7 @@ const Index = () => {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <ClipboardList className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary">Escalas</h3>
+            <h3 className="text-lg font-semibold mb-2 text-white">Escalas</h3>
             <p className="text-white/70 text-sm">
               Sistema completo de escalas com troca de turnos e aprovação de líderes
             </p>
@@ -90,7 +90,7 @@ const Index = () => {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Users className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary">Gestão de Membros</h3>
+            <h3 className="text-lg font-semibold mb-2 text-white">Gestão de Membros</h3>
             <p className="text-white/70 text-sm">
               Organize membros por ministérios e acompanhe participação
             </p>
@@ -100,7 +100,7 @@ const Index = () => {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Church className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-primary">Controle de Acesso</h3>
+            <h3 className="text-lg font-semibold mb-2 text-white">Controle de Acesso</h3>
             <p className="text-white/70 text-sm">
               Diferentes níveis de permissão para admins, líderes e membros
             </p>

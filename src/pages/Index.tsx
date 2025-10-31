@@ -31,11 +31,11 @@ const Index = () => {
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow">
             <Church className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-primary">
             Gestão Igreja
           </span>
         </div>
-        <Button onClick={() => navigate("/auth")}>
+        <Button onClick={() => navigate("/auth")} className="bg-primary hover:bg-primary/90">
           Entrar
         </Button>
       </nav>
@@ -66,42 +66,42 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+          <div className="bg-card/30 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:shadow-elegant transition-all">
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Calendar className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Agenda Inteligente</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="text-lg font-semibold mb-2 text-primary">Agenda</h3>
+            <p className="text-white/70 text-sm">
               Calendário completo com eventos recorrentes e notificações automáticas
             </p>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-              <ClipboardList className="w-6 h-6 text-accent" />
+          <div className="bg-card/30 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:shadow-elegant transition-all">
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <ClipboardList className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Escalas</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="text-lg font-semibold mb-2 text-primary">Escalas</h3>
+            <p className="text-white/70 text-sm">
               Sistema completo de escalas com troca de turnos e aprovação de líderes
             </p>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
+          <div className="bg-card/30 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:shadow-elegant transition-all">
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Users className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Gestão de Membros</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="text-lg font-semibold mb-2 text-primary">Gestão de Membros</h3>
+            <p className="text-white/70 text-sm">
               Organize membros por ministérios e acompanhe participação
             </p>
           </div>
 
-          <div className="bg-card p-6 rounded-xl border hover:shadow-elegant transition-all">
-            <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
-              <Church className="w-6 h-6 text-accent" />
+          <div className="bg-card/30 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:shadow-elegant transition-all">
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <Church className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Controle de Acesso</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="text-lg font-semibold mb-2 text-primary">Controle de Acesso</h3>
+            <p className="text-white/70 text-sm">
               Diferentes níveis de permissão para admins, líderes e membros
             </p>
           </div>

@@ -1,177 +1,167 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Users, ClipboardList, LogOut, Church } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-
-const sb = supabase as any;
+import { Calendar, Users, ClipboardList, TrendingUp, Video } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-
-      setUser(session.user);
-      
-      const { data: profileData } = await sb
-        .from("profiles")
-        .select("*")
-        .eq("id", session.user.id)
-        .single();
-      
-      setProfile(profileData);
-      setLoading(false);
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        navigate("/auth");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Logout realizado",
-      description: "Até logo!",
-    });
-    navigate("/auth");
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-primary">Carregando...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Church className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Gestão Igreja
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Olá, {profile?.full_name}
-              </p>
-            </div>
-          </div>
-          <Button variant="ghost" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
-          </Button>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
+    <DashboardLayout>
+      <div className="p-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Dashboard</h2>
-          <p className="text-muted-foreground">
-            Bem-vindo ao sistema de gestão da sua igreja
-          </p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+          <p className="text-muted-foreground">Bem-vindo ao sistema de gestão da igreja</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-elegant transition-all cursor-pointer border-l-4 border-l-primary">
-            <CardHeader>
-              <Calendar className="w-10 h-10 text-primary mb-2" />
-              <CardTitle>Agenda</CardTitle>
-              <CardDescription>
-                Visualize e gerencie todos os eventos e cultos
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" onClick={() => navigate("/eventos")}>
-                Ver Agenda
-              </Button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <Badge variant="success" className="text-xs">+2%</Badge>
+              </div>
+              <h3 className="text-3xl font-bold text-foreground mb-1">1,234</h3>
+              <p className="text-sm text-muted-foreground">Total de Membros</p>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-elegant transition-all cursor-pointer border-l-4 border-l-accent">
-            <CardHeader>
-              <ClipboardList className="w-10 h-10 text-accent mb-2" />
-              <CardTitle>Escalas</CardTitle>
-              <CardDescription>
-                Gerencie escalas e responsáveis
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" variant="secondary" onClick={() => navigate("/escalas")}>
-                Ver Escalas
-              </Button>
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Calendar className="w-6 h-6 text-primary" />
+                </div>
+                <Badge variant="success" className="text-xs">+5</Badge>
+              </div>
+              <h3 className="text-3xl font-bold text-foreground mb-1">18</h3>
+              <p className="text-sm text-muted-foreground">Eventos este Mês</p>
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-elegant transition-all cursor-pointer border-l-4 border-l-primary">
-            <CardHeader>
-              <Users className="w-10 h-10 text-primary mb-2" />
-              <CardTitle>Membros</CardTitle>
-              <CardDescription>
-                Cadastro e gestão de membros e ministérios
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" onClick={() => navigate("/membros")}>
-                Ver Membros
-              </Button>
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Video className="w-6 h-6 text-primary" />
+                </div>
+                <Badge variant="success" className="text-xs">+8</Badge>
+              </div>
+              <h3 className="text-3xl font-bold text-foreground mb-1">156</h3>
+              <p className="text-sm text-muted-foreground">Vídeos Publicados</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-primary" />
+                </div>
+                <Badge variant="success" className="text-xs">+7%</Badge>
+              </div>
+              <h3 className="text-3xl font-bold text-foreground mb-1">87%</h3>
+              <p className="text-sm text-muted-foreground">Taxa de Presença</p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <Card className="border-border">
             <CardHeader>
-              <CardTitle>Próximos Eventos</CardTitle>
-              <CardDescription>Eventos agendados para esta semana</CardDescription>
+              <CardTitle className="text-foreground">Calendário</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Calendar className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>Nenhum evento agendado</p>
+              <div className="h-64 flex items-center justify-center text-muted-foreground">
+                <Calendar className="w-16 h-16 opacity-20" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Minhas Escalas</CardTitle>
-              <CardDescription>Suas próximas responsabilidades</CardDescription>
+          <Card className="border-border">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-foreground">Próximos Eventos</CardTitle>
+              <button className="text-sm text-primary hover:underline">Ver todos</button>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <ClipboardList className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>Você não está escalado</p>
+            <CardContent className="space-y-4">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                <div className="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-foreground">Culto de Domingo - 10h</h4>
+                  <p className="text-sm text-muted-foreground">03 Nov 2024 às 10:00</p>
+                </div>
+                <span className="text-sm text-foreground font-medium">450</span>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-foreground">Culto de Domingo - 18h</h4>
+                  <p className="text-sm text-muted-foreground">03 Nov 2024 às 18:00</p>
+                </div>
+                <span className="text-sm text-foreground font-medium">300</span>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                  <Calendar className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-foreground">Evento de Jovens</h4>
+                  <p className="text-sm text-muted-foreground">04 Nov 2024 às 19:00</p>
+                </div>
+                <span className="text-sm text-foreground font-medium">200</span>
               </div>
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-foreground">Atividades Recentes</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                { text: "Novo membro cadastrado", subtitle: "Maria Silva - Lider PG - 2h atrás", color: "text-primary" },
+                { text: "Vídeo do culto publicado", subtitle: "Domingo - 10h atrás", color: "text-primary" },
+                { text: "Escala Azul confirmada", subtitle: "João Santos - Líder da Escala - 14 atrás", color: "text-primary" },
+                { text: "Evento de Jovens criado", subtitle: "Terça - Maio 14 - 2d atrás", color: "text-primary" },
+              ].map((activity, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className={`w-2 h-2 rounded-full ${activity.color} mt-2`} />
+                  <div>
+                    <p className="text-sm text-foreground">{activity.text}</p>
+                    <p className="text-xs text-muted-foreground">{activity.subtitle}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-foreground">Culto de Domingo - 27/10/2024</CardTitle>
+              <Badge variant="destructive" className="w-fit">Destaque</Badge>
+            </CardHeader>
+            <CardContent>
+              <div className="aspect-video bg-muted rounded-lg overflow-hidden mb-3">
+                <img 
+                  src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800" 
+                  alt="Culto" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">Mensagem: "A Fé que Move Montanhas"</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

@@ -84,19 +84,19 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary/10 via-background to-accent/10">
-      <Card className="w-full max-w-md shadow-elegant">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-md border-border/50">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow">
-              <Church className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+              <Church className="w-8 h-8 text-primary-foreground" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Gestão Igreja
+          <CardTitle className="text-3xl font-bold text-foreground">
+            Igreja Digital
           </CardTitle>
-          <CardDescription>
-            Sistema completo de gestão de eventos e escalas
+          <CardDescription className="text-muted-foreground">
+            Sistema de Gestão
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -22,6 +22,7 @@ export type Database = {
           end_time: string
           event_type: string
           id: string
+          image_url: string | null
           is_recurring: boolean | null
           location: string | null
           recurrence_pattern: string | null
@@ -37,6 +38,7 @@ export type Database = {
           end_time: string
           event_type: string
           id?: string
+          image_url?: string | null
           is_recurring?: boolean | null
           location?: string | null
           recurrence_pattern?: string | null
@@ -52,6 +54,7 @@ export type Database = {
           end_time?: string
           event_type?: string
           id?: string
+          image_url?: string | null
           is_recurring?: boolean | null
           location?: string | null
           recurrence_pattern?: string | null
@@ -143,6 +146,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          read: boolean | null
+          related_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean | null
+          related_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean | null
+          related_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -255,6 +291,48 @@ export type Database = {
           },
         ]
       }
+      small_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          leader_id: string | null
+          location: string | null
+          meeting_day: string | null
+          meeting_time: string | null
+          member_count: number | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          leader_id?: string | null
+          location?: string | null
+          meeting_day?: string | null
+          meeting_time?: string | null
+          member_count?: number | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          leader_id?: string | null
+          location?: string | null
+          meeting_day?: string | null
+          meeting_time?: string | null
+          member_count?: number | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       swap_requests: {
         Row: {
           approved_by: string | null
@@ -345,6 +423,53 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      videos: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_id: string | null
+          id: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          uploaded_by: string
+          views: number | null
+          youtube_url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          uploaded_by: string
+          views?: number | null
+          youtube_url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          uploaded_by?: string
+          views?: number | null
+          youtube_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]

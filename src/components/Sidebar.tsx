@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Church, LayoutDashboard, Calendar, Users, ClipboardList, Users as GroupsIcon, Video, Bell, LogOut } from "lucide-react";
+import { Church, LayoutDashboard, Calendar, Users, ClipboardList, Users as GroupsIcon, Video, Bell, LogOut, UserCircle, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,8 @@ const navItems = [
   { path: "/pequenos-grupos", icon: GroupsIcon, label: "Pequenos Grupos" },
   { path: "/videos", icon: Video, label: "Vídeos" },
   { path: "/notificacoes", icon: Bell, label: "Notificações", badge: 5 },
+  { path: "/convites", icon: UserPlus, label: "Convites" },
+  { path: "/minha-conta", icon: UserCircle, label: "Minha Conta" },
 ];
 
 export const Sidebar = () => {

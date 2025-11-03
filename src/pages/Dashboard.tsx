@@ -19,7 +19,7 @@ const Dashboard = () => {
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Users className="w-6 h-6 text-primary" />
                 </div>
-                <Badge variant="success" className="text-xs">+2%</Badge>
+                <Badge variant="success" className="text-xs text-white">+2%</Badge>
               </div>
               <h3 className="text-3xl font-bold text-foreground mb-1">1,234</h3>
               <p className="text-sm text-muted-foreground">Total de Membros</p>
@@ -32,7 +32,7 @@ const Dashboard = () => {
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-primary" />
                 </div>
-                <Badge variant="success" className="text-xs">+5</Badge>
+                <Badge variant="success" className="text-xs text-white">+5</Badge>
               </div>
               <h3 className="text-3xl font-bold text-foreground mb-1">18</h3>
               <p className="text-sm text-muted-foreground">Eventos este Mês</p>
@@ -45,7 +45,7 @@ const Dashboard = () => {
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Video className="w-6 h-6 text-primary" />
                 </div>
-                <Badge variant="success" className="text-xs">+8</Badge>
+                <Badge variant="success" className="text-xs text-white">+8</Badge>
               </div>
               <h3 className="text-3xl font-bold text-foreground mb-1">156</h3>
               <p className="text-sm text-muted-foreground">Vídeos Publicados</p>
@@ -58,7 +58,7 @@ const Dashboard = () => {
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-primary" />
                 </div>
-                <Badge variant="success" className="text-xs">+7%</Badge>
+                <Badge variant="success" className="text-xs text-white">+7%</Badge>
               </div>
               <h3 className="text-3xl font-bold text-foreground mb-1">87%</h3>
               <p className="text-sm text-muted-foreground">Taxa de Presença</p>

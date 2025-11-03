@@ -12,6 +12,8 @@ import Membros from "./pages/Membros";
 import PequenosGrupos from "./pages/PequenosGrupos";
 import Videos from "./pages/Videos";
 import Notificacoes from "./pages/Notificacoes";
+import MinhaConta from "./pages/MinhaConta";
+import Convites from "./pages/Convites";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/pequenos-grupos" element={<PequenosGrupos />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/notificacoes" element={<Notificacoes />} />
+          <Route path="/minha-conta" element={<MinhaConta />} />
+          <Route path="/convites" element={<Convites />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -12,6 +12,19 @@ import { Calendar, Plus, ArrowLeft, MapPin, Clock, User, Loader2 } from "lucide-
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { z } from "zod";
+
+const eventSchema = z.object({
+  title: z.string().trim().min(1, "Título é obrigatório").max(200, "Título deve ter no máximo 200 caracteres"),
+  description: z.string().trim().max(1000, "Descrição deve ter no máximo 1000 caracteres").optional(),
+  event_type: z.enum(['culto', 'ensaio', 'reuniao', 'curso', 'evento_especial'], {
+    errorMap: () => ({ message: "Tipo de evento inválido" })
+  }),
+  start_time: z.string().min(1, "Data/hora de início é obrigatória"),
+  end_time: z.string().min(1, "Data/hora de fim é obrigatória"),
+  location: z.string().trim().max(200, "Local deve ter no máximo 200 caracteres").optional(),
+  is_recurring: z.boolean(),
+});
 
 const sb = supabase as any;
 
@@ -78,34 +91,59 @@ const Eventos = () => {
     const formData = new FormData(e.currentTarget);
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return;
+    if (!user) {
+      setSubmitting(false);
+      return;
+    }
 
-    const eventData = {
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      event_type: formData.get("event_type") as string,
-      start_time: formData.get("start_time") as string,
-      end_time: formData.get("end_time") as string,
-      location: formData.get("location") as string,
-      is_recurring: formData.get("is_recurring") === "true",
-      created_by: user.id,
-    };
+    try {
+      const rawData = {
+        title: formData.get("title") as string,
+        description: (formData.get("description") as string) || "",
+        event_type: formData.get("event_type") as string,
+        start_time: formData.get("start_time") as string,
+        end_time: formData.get("end_time") as string,
+        location: (formData.get("location") as string) || "",
+        is_recurring: formData.get("is_recurring") === "true",
+      };
 
-    const { error } = await sb.from("events").insert([eventData]);
+      const validatedData = eventSchema.parse(rawData);
 
-    if (error) {
-      toast({
-        title: "Erro ao criar evento",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Evento criado!",
-        description: "O evento foi adicionado à agenda.",
-      });
-      setDialogOpen(false);
-      loadEvents();
+      const eventData = {
+        ...validatedData,
+        created_by: user.id,
+      };
+
+      const { error } = await sb.from("events").insert([eventData]);
+
+      if (error) {
+        toast({
+          title: "Erro ao criar evento",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Evento criado!",
+          description: "O evento foi adicionado à agenda.",
+        });
+        setDialogOpen(false);
+        loadEvents();
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Dados inválidos",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro ao criar evento",
+          description: "Ocorreu um erro ao processar os dados.",
+          variant: "destructive",
+        });
+      }
     }
 
     setSubmitting(false);

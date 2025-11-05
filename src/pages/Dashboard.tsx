@@ -1,9 +1,36 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Users, ClipboardList, TrendingUp, Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+const sb = supabase as any;
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadUpcomingEvents();
+  }, []);
+
+  const loadUpcomingEvents = async () => {
+    const { data } = await sb
+      .from("events")
+      .select("*")
+      .gte("start_time", new Date().toISOString())
+      .order("start_time", { ascending: true })
+      .limit(3);
+
+    if (data) {
+      setUpcomingEvents(data);
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="p-8">
@@ -81,41 +108,39 @@ const Dashboard = () => {
           <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-foreground">Próximos Eventos</CardTitle>
-              <button className="text-sm text-primary hover:underline">Ver todos</button>
+              <button 
+                onClick={() => navigate("/eventos")}
+                className="text-sm text-primary hover:underline"
+              >
+                Ver todos
+              </button>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-6 h-6 text-white" />
+              {upcomingEvents.length > 0 ? (
+                upcomingEvents.map((event, index) => (
+                  <div key={event.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                    <div className={`w-12 h-12 rounded-lg ${
+                      index === 0 ? "bg-blue-500" : index === 1 ? "bg-secondary" : "bg-primary"
+                    } flex items-center justify-center flex-shrink-0`}>
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-foreground">{event.title}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(event.start_time), "dd MMM yyyy 'às' HH:mm", { locale: ptBR })}
+                      </p>
+                      {event.location && (
+                        <p className="text-xs text-muted-foreground mt-1">{event.location}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Calendar className="w-12 h-12 mx-auto mb-2 opacity-20" />
+                  <p className="text-sm">Nenhum evento próximo</p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-foreground">Culto de Domingo - 10h</h4>
-                  <p className="text-sm text-muted-foreground">03 Nov 2024 às 10:00</p>
-                </div>
-                <span className="text-sm text-foreground font-medium">450</span>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-foreground">Culto de Domingo - 18h</h4>
-                  <p className="text-sm text-muted-foreground">03 Nov 2024 às 18:00</p>
-                </div>
-                <span className="text-sm text-foreground font-medium">300</span>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-foreground">Evento de Jovens</h4>
-                  <p className="text-sm text-muted-foreground">04 Nov 2024 às 19:00</p>
-                </div>
-                <span className="text-sm text-foreground font-medium">200</span>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

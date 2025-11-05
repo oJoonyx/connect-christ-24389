@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Plus, ArrowLeft, MapPin, Clock, User, Loader2 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Calendar, Plus, ArrowLeft, MapPin, Clock, User, Loader2, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -36,6 +37,9 @@ const Eventos = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [userRole, setUserRole] = useState<string>("");
+  const [editingEvent, setEditingEvent] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<any>(null);
 
   useEffect(() => {
     checkAuthAndLoadData();
@@ -109,26 +113,51 @@ const Eventos = () => {
 
       const validatedData = eventSchema.parse(rawData);
 
-      const eventData = {
-        ...validatedData,
-        created_by: user.id,
-      };
+      if (editingEvent) {
+        // Update existing event
+        const { error } = await sb
+          .from("events")
+          .update(validatedData)
+          .eq("id", editingEvent.id);
 
-      const { error } = await sb.from("events").insert([eventData]);
-
-      if (error) {
-        toast({
-          title: "Erro ao criar evento",
-          description: error.message,
-          variant: "destructive",
-        });
+        if (error) {
+          toast({
+            title: "Erro ao atualizar evento",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Evento atualizado!",
+            description: "As alterações foram salvas.",
+          });
+          setDialogOpen(false);
+          setEditingEvent(null);
+          loadEvents();
+        }
       } else {
-        toast({
-          title: "Evento criado!",
-          description: "O evento foi adicionado à agenda.",
-        });
-        setDialogOpen(false);
-        loadEvents();
+        // Create new event
+        const eventData = {
+          ...validatedData,
+          created_by: user.id,
+        };
+
+        const { error } = await sb.from("events").insert([eventData]);
+
+        if (error) {
+          toast({
+            title: "Erro ao criar evento",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Evento criado!",
+            description: "O evento foi adicionado à agenda.",
+          });
+          setDialogOpen(false);
+          loadEvents();
+        }
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -149,6 +178,35 @@ const Eventos = () => {
     setSubmitting(false);
   };
 
+  const handleDeleteEvent = async () => {
+    if (!eventToDelete) return;
+
+    const { error } = await sb
+      .from("events")
+      .delete()
+      .eq("id", eventToDelete.id);
+
+    if (error) {
+      toast({
+        title: "Erro ao deletar evento",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Evento deletado!",
+        description: "O evento foi removido da agenda.",
+      });
+      setDeleteDialogOpen(false);
+      setEventToDelete(null);
+      loadEvents();
+    }
+  };
+
+  const canManageEvent = (event: any) => {
+    return userRole === "admin" || userRole === "leader" || event.created_by === event.created_by;
+  };
+
   const canCreateEvent = userRole === "admin" || userRole === "leader";
 
   return (
@@ -165,7 +223,10 @@ const Eventos = () => {
             </div>
           </div>
           {canCreateEvent && (
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog open={dialogOpen} onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) setEditingEvent(null);
+            }}>
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
@@ -174,19 +235,25 @@ const Eventos = () => {
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Criar Novo Evento</DialogTitle>
+                  <DialogTitle>{editingEvent ? "Editar Evento" : "Criar Novo Evento"}</DialogTitle>
                   <DialogDescription>
-                    Adicione um novo evento ou culto à agenda
+                    {editingEvent ? "Atualize as informações do evento" : "Adicione um novo evento ou culto à agenda"}
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleCreateEvent} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="title">Título *</Label>
-                    <Input id="title" name="title" placeholder="Culto de Celebração" required />
+                    <Input 
+                      id="title" 
+                      name="title" 
+                      placeholder="Culto de Celebração" 
+                      defaultValue={editingEvent?.title}
+                      required 
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="event_type">Tipo de Evento *</Label>
-                    <Select name="event_type" required>
+                    <Select name="event_type" defaultValue={editingEvent?.event_type} required>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione o tipo" />
                       </SelectTrigger>
@@ -206,6 +273,7 @@ const Eventos = () => {
                         id="start_time"
                         name="start_time"
                         type="datetime-local"
+                        defaultValue={editingEvent?.start_time ? new Date(editingEvent.start_time).toISOString().slice(0, 16) : ""}
                         required
                       />
                     </div>
@@ -215,13 +283,19 @@ const Eventos = () => {
                         id="end_time"
                         name="end_time"
                         type="datetime-local"
+                        defaultValue={editingEvent?.end_time ? new Date(editingEvent.end_time).toISOString().slice(0, 16) : ""}
                         required
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="location">Local</Label>
-                    <Input id="location" name="location" placeholder="Templo Principal" />
+                    <Input 
+                      id="location" 
+                      name="location" 
+                      placeholder="Templo Principal" 
+                      defaultValue={editingEvent?.location}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Descrição</Label>
@@ -229,6 +303,7 @@ const Eventos = () => {
                       id="description"
                       name="description"
                       placeholder="Detalhes sobre o evento..."
+                      defaultValue={editingEvent?.description}
                       rows={3}
                     />
                   </div>
@@ -238,6 +313,7 @@ const Eventos = () => {
                       id="is_recurring"
                       name="is_recurring"
                       value="true"
+                      defaultChecked={editingEvent?.is_recurring}
                       className="rounded"
                     />
                     <Label htmlFor="is_recurring">Evento recorrente</Label>
@@ -246,7 +322,10 @@ const Eventos = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => setDialogOpen(false)}
+                      onClick={() => {
+                        setDialogOpen(false);
+                        setEditingEvent(null);
+                      }}
                     >
                       Cancelar
                     </Button>
@@ -254,10 +333,10 @@ const Eventos = () => {
                       {submitting ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Criando...
+                          {editingEvent ? "Salvando..." : "Criando..."}
                         </>
                       ) : (
-                        "Criar Evento"
+                        editingEvent ? "Salvar Alterações" : "Criar Evento"
                       )}
                     </Button>
                   </div>
@@ -296,7 +375,7 @@ const Eventos = () => {
             {events.map((event) => (
               <Card key={event.id} className="hover:shadow-elegant transition-all">
                 <CardHeader>
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <CardTitle className="text-xl">{event.title}</CardTitle>
                       <CardDescription className="mt-1">
@@ -310,24 +389,50 @@ const Eventos = () => {
                         )}
                       </CardDescription>
                     </div>
-                    <div
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        event.status === "scheduled"
-                          ? "bg-blue-100 text-blue-700"
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <div
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          event.status === "scheduled"
+                            ? "bg-blue-100 text-blue-700"
+                            : event.status === "ongoing"
+                            ? "bg-green-100 text-green-700"
+                            : event.status === "completed"
+                            ? "bg-gray-100 text-gray-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {event.status === "scheduled"
+                          ? "Agendado"
                           : event.status === "ongoing"
-                          ? "bg-green-100 text-green-700"
+                          ? "Em Andamento"
                           : event.status === "completed"
-                          ? "bg-gray-100 text-gray-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {event.status === "scheduled"
-                        ? "Agendado"
-                        : event.status === "ongoing"
-                        ? "Em Andamento"
-                        : event.status === "completed"
-                        ? "Concluído"
-                        : "Cancelado"}
+                          ? "Concluído"
+                          : "Cancelado"}
+                      </div>
+                      {canManageEvent(event) && (
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEditingEvent(event);
+                              setDialogOpen(true);
+                            }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEventToDelete(event);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
@@ -359,6 +464,23 @@ const Eventos = () => {
           </div>
         )}
       </main>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja deletar o evento "{eventToDelete?.title}"? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setEventToDelete(null)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteEvent} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Deletar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

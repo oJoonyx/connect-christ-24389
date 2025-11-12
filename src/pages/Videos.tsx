@@ -12,16 +12,6 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { z } from "zod";
-
-const videoSchema = z.object({
-  title: z.string().trim().min(1, "Título é obrigatório").max(200, "Título deve ter no máximo 200 caracteres"),
-  youtube_url: z.string().trim().url("URL inválida").refine(
-    (url) => /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/.test(url),
-    "URL deve ser do YouTube"
-  ),
-  description: z.string().trim().max(1000, "Descrição deve ter no máximo 1000 caracteres").optional(),
-});
 
 const sb = supabase as any;
 
@@ -93,57 +83,34 @@ const Videos = () => {
     const formData = new FormData(e.currentTarget);
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      setSubmitting(false);
-      return;
-    }
+    if (!user) return;
 
-    try {
-      const rawData = {
-        title: formData.get("title") as string,
-        youtube_url: formData.get("youtube_url") as string,
-        description: (formData.get("description") as string) || "",
-      };
+    const youtubeUrl = formData.get("youtube_url") as string;
+    const videoId = extractYouTubeId(youtubeUrl);
 
-      const validatedData = videoSchema.parse(rawData);
-      const videoId = extractYouTubeId(validatedData.youtube_url);
+    const videoData = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      youtube_url: youtubeUrl,
+      thumbnail_url: videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null,
+      uploaded_by: user.id,
+    };
 
-      const videoData = {
-        ...validatedData,
-        thumbnail_url: videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null,
-        uploaded_by: user.id,
-      };
+    const { error } = await sb.from("videos").insert([videoData]);
 
-      const { error } = await sb.from("videos").insert([videoData]);
-
-      if (error) {
-        toast({
-          title: "Erro ao adicionar vídeo",
-          description: error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Vídeo adicionado!",
-          description: "O vídeo foi adicionado à biblioteca.",
-        });
-        setDialogOpen(false);
-        loadVideos();
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Dados inválidos",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erro ao adicionar vídeo",
-          description: "Ocorreu um erro ao processar os dados.",
-          variant: "destructive",
-        });
-      }
+    if (error) {
+      toast({
+        title: "Erro ao adicionar vídeo",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Vídeo adicionado!",
+        description: "O vídeo foi adicionado à biblioteca.",
+      });
+      setDialogOpen(false);
+      loadVideos();
     }
 
     setSubmitting(false);

@@ -12,6 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ArrowLeft, Users, Plus, Loader2, Shield, User as UserIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const ministrySchema = z.object({
+  name: z.string().trim().min(1, "Nome é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
+  description: z.string().trim().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
+  color: z.string().regex(/^#[0-9A-F]{6}$/i, "Cor deve ser um código hexadecimal válido"),
+});
 
 const sb = supabase as any;
 
@@ -88,30 +95,55 @@ const Membros = () => {
     const formData = new FormData(e.currentTarget);
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return;
+    if (!user) {
+      setSubmitting(false);
+      return;
+    }
 
-    const ministryData = {
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      color: formData.get("color") as string,
-      leader_id: user.id,
-    };
+    try {
+      const rawData = {
+        name: formData.get("name") as string,
+        description: (formData.get("description") as string) || "",
+        color: formData.get("color") as string,
+      };
 
-    const { error } = await sb.from("ministries").insert([ministryData]);
+      const validatedData = ministrySchema.parse(rawData);
 
-    if (error) {
-      toast({
-        title: "Erro ao criar ministério",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Ministério criado!",
-        description: "O ministério foi adicionado com sucesso.",
-      });
-      setMinistryDialogOpen(false);
-      loadData();
+      const ministryData = {
+        ...validatedData,
+        leader_id: user.id,
+      };
+
+      const { error } = await sb.from("ministries").insert([ministryData]);
+
+      if (error) {
+        toast({
+          title: "Erro ao criar ministério",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Ministério criado!",
+          description: "O ministério foi adicionado com sucesso.",
+        });
+        setMinistryDialogOpen(false);
+        loadData();
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Dados inválidos",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro ao criar ministério",
+          description: "Ocorreu um erro ao processar os dados.",
+          variant: "destructive",
+        });
+      }
     }
 
     setSubmitting(false);

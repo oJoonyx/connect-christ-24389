@@ -10,6 +10,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Plus, Users, MapPin, Calendar, Clock, Loader2, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { z } from "zod";
+
+const groupSchema = z.object({
+  name: z.string().trim().min(1, "Nome é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
+  description: z.string().trim().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
+  meeting_day: z.string().trim().max(50, "Dia da reunião deve ter no máximo 50 caracteres").optional(),
+  meeting_time: z.string().optional(),
+  location: z.string().trim().max(200, "Local deve ter no máximo 200 caracteres").optional(),
+  image_url: z.string().url("URL de imagem inválida").optional().or(z.literal("")),
+});
 
 const sb = supabase as any;
 
@@ -112,33 +122,58 @@ const PequenosGrupos = () => {
     const formData = new FormData(e.currentTarget);
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return;
+    if (!user) {
+      setSubmitting(false);
+      return;
+    }
 
-    const groupData = {
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      meeting_day: formData.get("meeting_day") as string,
-      meeting_time: formData.get("meeting_time") as string,
-      location: formData.get("location") as string,
-      image_url: formData.get("image_url") as string,
-      leader_id: user.id,
-    };
+    try {
+      const rawData = {
+        name: formData.get("name") as string,
+        description: (formData.get("description") as string) || "",
+        meeting_day: (formData.get("meeting_day") as string) || "",
+        meeting_time: (formData.get("meeting_time") as string) || "",
+        location: (formData.get("location") as string) || "",
+        image_url: (formData.get("image_url") as string) || "",
+      };
 
-    const { error } = await sb.from("small_groups").insert([groupData]);
+      const validatedData = groupSchema.parse(rawData);
 
-    if (error) {
-      toast({
-        title: "Erro ao criar grupo",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Grupo criado!",
-        description: "O pequeno grupo foi adicionado.",
-      });
-      setDialogOpen(false);
-      loadGroups();
+      const groupData = {
+        ...validatedData,
+        leader_id: user.id,
+      };
+
+      const { error } = await sb.from("small_groups").insert([groupData]);
+
+      if (error) {
+        toast({
+          title: "Erro ao criar grupo",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Grupo criado!",
+          description: "O pequeno grupo foi adicionado.",
+        });
+        setDialogOpen(false);
+        loadGroups();
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Dados inválidos",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro ao criar grupo",
+          description: "Ocorreu um erro ao processar os dados.",
+          variant: "destructive",
+        });
+      }
     }
 
     setSubmitting(false);

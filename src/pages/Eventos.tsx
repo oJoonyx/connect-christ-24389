@@ -8,10 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, Plus, ArrowLeft, MapPin, Clock, User, Loader2 } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, ArrowLeft, MapPin, Clock, User, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 const sb = supabase as any;
 
@@ -23,6 +26,8 @@ const Eventos = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [userRole, setUserRole] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   useEffect(() => {
     checkAuthAndLoadData();
@@ -112,6 +117,22 @@ const Eventos = () => {
   };
 
   const canCreateEvent = userRole === "admin" || userRole === "leader";
+
+  const getEventColor = (eventType: string) => {
+    const colors: Record<string, string> = {
+      "Culto": "bg-primary",
+      "Reunião": "bg-secondary",
+      "Estudo": "bg-accent",
+      "Outros": "bg-muted"
+    };
+    return colors[eventType] || "bg-muted";
+  };
+
+  const getEventsForDate = (date: Date) => {
+    return events.filter(event => 
+      isSameDay(new Date(event.start_time), date)
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">

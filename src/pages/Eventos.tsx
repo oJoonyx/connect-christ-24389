@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -116,11 +117,12 @@ const Eventos = () => {
     setSubmitting(false);
   };
 
+
   const canCreateEvent = userRole === "admin" || userRole === "leader";
 
   const getEventColor = (eventType: string) => {
     const colors: Record<string, string> = {
-      "Culto": "bg-primary",
+      "Culto": "bg-destructive",
       "Reunião": "bg-secondary",
       "Estudo": "bg-accent",
       "Outros": "bg-muted"
@@ -143,8 +145,8 @@ const Eventos = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-xl font-bold">Agenda de Eventos</h1>
-              <p className="text-sm text-muted-foreground">Gerencie cultos e eventos</p>
+              <h1 className="text-2xl font-bold">Eventos</h1>
+              <p className="text-sm text-muted-foreground">Gerencie a agenda da igreja</p>
             </div>
           </div>
           {canCreateEvent && (
@@ -159,14 +161,15 @@ const Eventos = () => {
                 <DialogHeader>
                   <DialogTitle>Criar Novo Evento</DialogTitle>
                   <DialogDescription>
-                    Adicione um novo evento ou culto à agenda
+                    Preencha as informações do evento
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleCreateEvent} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="title">Título *</Label>
-                    <Input id="title" name="title" placeholder="Culto de Celebração" required />
+                    <Input id="title" name="title" required placeholder="Ex: Culto de Celebração" />
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="event_type">Tipo de Evento *</Label>
                     <Select name="event_type" required>
@@ -174,63 +177,55 @@ const Eventos = () => {
                         <SelectValue placeholder="Selecione o tipo" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="culto">Culto</SelectItem>
-                        <SelectItem value="ensaio">Ensaio</SelectItem>
-                        <SelectItem value="reuniao">Reunião</SelectItem>
-                        <SelectItem value="curso">Curso</SelectItem>
-                        <SelectItem value="evento_especial">Evento Especial</SelectItem>
+                        <SelectItem value="Culto">Culto</SelectItem>
+                        <SelectItem value="Reunião">Reunião</SelectItem>
+                        <SelectItem value="Estudo">Estudo Bíblico</SelectItem>
+                        <SelectItem value="Outros">Outros</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="start_time">Data/Hora Início *</Label>
-                      <Input
-                        id="start_time"
-                        name="start_time"
-                        type="datetime-local"
-                        required
-                      />
+                      <Label htmlFor="start_time">Data e Hora de Início *</Label>
+                      <Input id="start_time" name="start_time" type="datetime-local" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="end_time">Data/Hora Fim *</Label>
-                      <Input
-                        id="end_time"
-                        name="end_time"
-                        type="datetime-local"
-                        required
-                      />
+                      <Label htmlFor="end_time">Data e Hora de Término *</Label>
+                      <Input id="end_time" name="end_time" type="datetime-local" required />
                     </div>
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="location">Local</Label>
-                    <Input id="location" name="location" placeholder="Templo Principal" />
+                    <Input id="location" name="location" placeholder="Ex: Templo Principal" />
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="description">Descrição</Label>
                     <Textarea
                       id="description"
                       name="description"
-                      placeholder="Detalhes sobre o evento..."
+                      placeholder="Descreva o evento..."
                       rows={3}
                     />
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id="is_recurring"
-                      name="is_recurring"
-                      value="true"
-                      className="rounded"
-                    />
-                    <Label htmlFor="is_recurring">Evento recorrente</Label>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="is_recurring">Evento Recorrente</Label>
+                    <Select name="is_recurring" defaultValue="false">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="false">Não</SelectItem>
+                        <SelectItem value="true">Sim</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
+
                   <div className="flex justify-end gap-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setDialogOpen(false)}
-                    >
+                    <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                       Cancelar
                     </Button>
                     <Button type="submit" disabled={submitting}>
@@ -252,95 +247,169 @@ const Eventos = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          </div>
-        ) : events.length === 0 ? (
-          <Card>
-            <CardContent className="py-20 text-center">
-              <Calendar className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-semibold mb-2">Nenhum evento agendado</h3>
-              <p className="text-muted-foreground mb-4">
-                {canCreateEvent
-                  ? "Comece criando seu primeiro evento"
-                  : "Aguarde os líderes criarem eventos"}
-              </p>
-              {canCreateEvent && (
-                <Button onClick={() => setDialogOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Criar Primeiro Evento
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4">
-            {events.map((event) => (
-              <Card key={event.id} className="hover:shadow-elegant transition-all">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-xl">{event.title}</CardTitle>
-                      <CardDescription className="mt-1">
-                        <span className="inline-block px-2 py-1 rounded-full text-xs bg-primary/10 text-primary">
-                          {event.event_type}
-                        </span>
-                        {event.is_recurring && (
-                          <span className="ml-2 inline-block px-2 py-1 rounded-full text-xs bg-accent/10 text-accent">
-                            Recorrente
-                          </span>
+        <Tabs defaultValue="calendar" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-6">
+            <TabsTrigger value="calendar">Calendário</TabsTrigger>
+            <TabsTrigger value="list">Lista</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="calendar" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Calendário de Eventos</CardTitle>
+                <CardDescription>
+                  Cores: Culto (Vermelho), Reunião (Amarelo), Estudo (Verde), Outros (Cinza)
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-7 gap-2 mb-4">
+                  {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                    <div key={day} className="text-center text-sm font-medium text-muted-foreground p-2">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-2">
+                  {eachDayOfInterval({
+                    start: startOfMonth(currentMonth),
+                    end: endOfMonth(currentMonth)
+                  }).map((day, idx) => {
+                    const dayEvents = getEventsForDate(day);
+                    const firstEvent = dayEvents[0];
+                    const colorClass = firstEvent ? getEventColor(firstEvent.event_type) : '';
+                    
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedDate(day)}
+                        className={cn(
+                          "min-h-20 p-2 rounded-lg border transition-all hover:scale-105",
+                          isSameMonth(day, currentMonth) ? "bg-card text-card-foreground" : "bg-muted/30 text-muted-foreground",
+                          isSameDay(day, selectedDate) && "ring-2 ring-primary",
+                          colorClass && `border-2 ${colorClass}`
                         )}
-                      </CardDescription>
-                    </div>
-                    <div
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        event.status === "scheduled"
-                          ? "bg-blue-100 text-blue-700"
-                          : event.status === "ongoing"
-                          ? "bg-green-100 text-green-700"
-                          : event.status === "completed"
-                          ? "bg-gray-100 text-gray-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {event.status === "scheduled"
-                        ? "Agendado"
-                        : event.status === "ongoing"
-                        ? "Em Andamento"
-                        : event.status === "completed"
-                        ? "Concluído"
-                        : "Cancelado"}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {event.description && (
-                    <p className="text-sm text-muted-foreground">{event.description}</p>
+                      >
+                        <div className="text-sm font-medium">{format(day, 'd')}</div>
+                        {dayEvents.length > 0 && (
+                          <div className="mt-1 text-xs">
+                            {dayEvents.length} evento{dayEvents.length > 1 ? 's' : ''}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <div className="mt-6 space-y-3">
+                  <h3 className="font-semibold">
+                    Eventos em {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
+                  </h3>
+                  {getEventsForDate(selectedDate).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhum evento nesta data</p>
+                  ) : (
+                    getEventsForDate(selectedDate).map((event) => (
+                      <Card key={event.id} className={cn("border-l-4", getEventColor(event.event_type))}>
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg">{event.title}</CardTitle>
+                            <Badge variant="outline">{event.event_type}</Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4" />
+                              {format(new Date(event.start_time), "HH:mm")}
+                            </div>
+                            {event.location && (
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4" />
+                                {event.location}
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
                   )}
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Clock className="w-4 h-4" />
-                      {format(new Date(event.start_time), "dd/MM/yyyy 'às' HH:mm", {
-                        locale: ptBR,
-                      })}
-                    </div>
-                    {event.location && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin className="w-4 h-4" />
-                        {event.location}
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <User className="w-4 h-4" />
-                      Por: {event.profiles?.full_name || "Usuário"}
-                    </div>
-                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="list">
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : events.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <CalendarIcon className="w-16 h-16 text-muted-foreground mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Nenhum evento encontrado</h3>
+                  <p className="text-muted-foreground text-center mb-4">
+                    {canCreateEvent 
+                      ? "Comece criando o primeiro evento para a comunidade."
+                      : "Aguarde os líderes criarem eventos."}
+                  </p>
+                  {canCreateEvent && (
+                    <Button onClick={() => setDialogOpen(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Criar Primeiro Evento
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
+            ) : (
+              <div className="grid gap-4">
+                {events.map((event) => (
+                  <Card key={event.id}>
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <CardTitle>{event.title}</CardTitle>
+                            <Badge variant="outline" className={cn("text-white", getEventColor(event.event_type))}>
+                              {event.event_type}
+                            </Badge>
+                            {event.is_recurring && (
+                              <Badge variant="secondary">Recorrente</Badge>
+                            )}
+                          </div>
+                          {event.description && (
+                            <CardDescription className="mt-2">
+                              {event.description}
+                            </CardDescription>
+                          )}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-3 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Clock className="w-4 h-4" />
+                          <span>
+                            {format(new Date(event.start_time), "PPP 'às' HH:mm", { locale: ptBR })}
+                          </span>
+                        </div>
+                        {event.location && (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <MapPin className="w-4 h-4" />
+                            <span>{event.location}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <User className="w-4 h-4" />
+                          <span>Criado por {event.profiles?.full_name}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
